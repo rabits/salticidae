@@ -6,28 +6,20 @@ Rectangle {
     width: 1280
     height: 720
     Rectangle {
-        width: 720
-        height: 480
-        //Camera {
-        //    id: camera
-        //}
-
+        width: 1440
+        height: 960
+        color: "#000"
         VideoOutput {
             id: vo_l
             anchors.fill: parent
-            //source: camera
-            source: app.camera("/dev/video0")
+            source: app.camera("/dev/video4")
         }
     }
 
     MouseArea {
         anchors.fill: parent
         onClicked: {
-            console.log("State:"+app.camera("/dev/video0").state);
-            console.log("Status:"+app.camera("/dev/video0").status);
-            app.camera("/dev/video0").start();
-            console.log("State:"+app.camera("/dev/video0").state);
-            console.log("Status:"+app.camera("/dev/video0").status);
+            app.camera("/dev/video4").startCapture();
             //Qt.quit();
         }
     }

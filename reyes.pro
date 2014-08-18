@@ -5,6 +5,8 @@ DEFINES += PROJECT_VERSION=\"$${VERSTR}\"
 
 QT += multimedia
 
+#QMAKE_CFLAGS += -std=c99
+
 # Add more folders to ship with the application, here
 folder_01.source = qml/reyes
 folder_01.target = qml
@@ -20,9 +22,10 @@ qtcAddDeployment()
 SOURCES += \
     src/main.cpp \
     src/eyes.cpp \
-    src/eye.cpp
+    src/eye.cpp \
+    src/v4l2.c
 
 HEADERS += \
     src/eyes.h \
-    src/eye.h
-
+    src/eye.h \
+    src/v4l2.h

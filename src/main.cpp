@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 
     QGuiApplication app(argc, argv);
 
-    qmlRegisterType<Eye>("org.rabits.eyes", 1, 0, "Eye");
+    Eye::registerQmlType();
 
     QtQuick2ApplicationViewer viewer;
 
