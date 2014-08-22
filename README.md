@@ -1,7 +1,8 @@
-rEyes - FPV camera viewer
-=========================
+Salticidae
+==========
 
-This is FPV viewer for your mobile phone & stereo glasses (like Oculus Rift).
+Flexible crossplatform live camera viewer.
+Also it is an FPV viewer for your mobile phone & stereo glasses (like Oculus Rift).
 
 Features:
 ---------
@@ -10,10 +11,13 @@ Features:
 
 TODO:
 -----
-* Dynamic & Configurable video output
+* Dynamic & Configurable video layout
 * Telemetry OSD support
 * Oculus Rift barrel distortion support
 * Oculus Rift head tracking (telemetry & trainer port) control support
+* IP cameras support
+* Video caching & navigation
+* Video archive support
 
 Requirements:
 -------------

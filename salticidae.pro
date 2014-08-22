@@ -8,7 +8,7 @@ QT += multimedia
 #QMAKE_CFLAGS += -std=c99
 
 # Add more folders to ship with the application, here
-folder_01.source = qml/reyes
+folder_01.source = qml/salticidae
 folder_01.target = qml
 DEPLOYMENTFOLDERS = folder_01
 

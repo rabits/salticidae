@@ -10,32 +10,31 @@ Eyes::Eyes(QObject *parent) :
   , m_translator()
   , m_eyes()
 {
-    qDebug("[rEyes] Init app");
+    qDebug("[Salticidae] Init app");
 
     if( m_settings.value("preferences/locale").isNull() )
         m_settings.setValue("preferences/locale", QLocale::system().name());
 
-    qDebug("[rEyes] Init eyes");
-    QByteArray s;
+    qDebug("[Salticidae] Init eyes");
+
+    //QByteArray s;
     //foreach( s, Eye::availableDevices() )
-    //    qDebug() << "[rEyes] Found camera: " << s;
+    //    qDebug() << "[Salticidae] Found camera: " << s;
 }
 
 Eyes::~Eyes()
 {
-    qDebug("[rEyes] Self destroying");
+    qDebug("[Salticidae] Self destroying");
 }
 
 void Eyes::initContext(QtQuick2ApplicationViewer &viewer, QGuiApplication *app)
 {
-    qDebug("[rEyes] Init context");
+    qDebug("[Salticidae] Init context");
 
     m_context = viewer.rootContext();
     m_app = app;
 
     m_context->setContextProperty("app", this);
-
-    // Close application on quit
 
     setLocale(setting("preferences/locale").toString());
     m_app->installTranslator(&m_translator);
@@ -43,7 +42,7 @@ void Eyes::initContext(QtQuick2ApplicationViewer &viewer, QGuiApplication *app)
 
 void Eyes::setLocale(QString locale)
 {
-    qDebug() << "[rEyes] Changing locale to " << locale;
+    qDebug() << "[Salticidae] Changing locale to " << locale;
     if( ! m_translator.load("tr_" + locale, ":/") )
     {
         m_translator.load("tr_en", ":/");
