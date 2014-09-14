@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 
     QGuiApplication app(argc, argv);
 
-    Eye::registerQmlType();
+    PluginManager::initPlugins();
 
     QtQuick2ApplicationViewer viewer;
 

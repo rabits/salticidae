@@ -10,7 +10,7 @@
 #include <qplatformdefs.h>
 
 #include "qtquick2applicationviewer.h"
-#include "src/eye.h"
+#include "pluginmanager.h"
 
 class Eyes : public QObject
 {
@@ -29,7 +29,10 @@ private:
     QTranslator      m_translator;
     QGuiApplication *m_app;
 
-    QList<Eye*> m_eyes;
+    QMap<QUrl, ProtoEye*> m_eyes;
+
+    QList<QUrl> m_sources;
+    QStringList m_schemes;
 
 public:
     inline static Eyes* I() { if( s_pInstance == NULL ) s_pInstance = new Eyes(); return s_pInstance; }
@@ -39,15 +42,20 @@ public:
     void setLocale(QString locale);
     void initRoot(QtQuick2ApplicationViewer &viewer);
 
-    QVariant setting(QString key, QString value = "");
+    Q_INVOKABLE QVariant setting(QString key, QString value = "");
 
-    Q_INVOKABLE Eye* camera(QString device) {
-        if( m_eyes.isEmpty() ) {
-            Eye* eye = new Eye(device.toLocal8Bit());
-            m_eyes.append(eye);
+    Q_INVOKABLE ProtoEye* eye(QString url) {
+        if( ! m_eyes.contains(url) ) {
+            m_eyes.insert(url, PluginManager::eye(QUrl(url)));
         }
-        return m_eyes.last();
+        return m_eyes.value(url);
     }
+
+    Q_INVOKABLE QList<QUrl> availableSources();
+    Q_INVOKABLE void updateSources();
+
+    Q_INVOKABLE QStringList availableSchemes();
+    Q_INVOKABLE void updateSchemes();
 
 signals:
     void settingChanged(QString key);

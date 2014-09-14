@@ -1,14 +1,15 @@
 #include <QDebug>
+#include <QScreen>
 
 #include "eyes.h"
 
 Eyes* Eyes::s_pInstance = NULL;
 
-Eyes::Eyes(QObject *parent) :
-    QObject(parent)
-  , m_settings()
-  , m_translator()
-  , m_eyes()
+Eyes::Eyes(QObject *parent)
+    : QObject(parent)
+    , m_settings()
+    , m_translator()
+    , m_eyes()
 {
     qDebug("[Salticidae] Init app");
 
@@ -16,10 +17,6 @@ Eyes::Eyes(QObject *parent) :
         m_settings.setValue("preferences/locale", QLocale::system().name());
 
     qDebug("[Salticidae] Init eyes");
-
-    //QByteArray s;
-    //foreach( s, Eye::availableDevices() )
-    //    qDebug() << "[Salticidae] Found camera: " << s;
 }
 
 Eyes::~Eyes()
@@ -35,6 +32,8 @@ void Eyes::initContext(QtQuick2ApplicationViewer &viewer, QGuiApplication *app)
     m_app = app;
 
     m_context->setContextProperty("app", this);
+    m_context->setContextProperty("screenScale",
+        QGuiApplication::primaryScreen()->physicalDotsPerInch() * QGuiApplication::primaryScreen()->devicePixelRatio() / 100);
 
     setLocale(setting("preferences/locale").toString());
     m_app->installTranslator(&m_translator);
@@ -42,7 +41,7 @@ void Eyes::initContext(QtQuick2ApplicationViewer &viewer, QGuiApplication *app)
 
 void Eyes::setLocale(QString locale)
 {
-    qDebug() << "[Salticidae] Changing locale to " << locale;
+    qDebug() << "[Salticidae] Set locale to" << locale;
     if( ! m_translator.load("tr_" + locale, ":/") )
     {
         m_translator.load("tr_en", ":/");
@@ -65,4 +64,30 @@ QVariant Eyes::setting(QString key, QString value)
     }
 
     return m_settings.value(key);
+}
+
+QList<QUrl> Eyes::availableSources()
+{
+    if( m_sources.isEmpty() )
+        updateSources();
+
+    return m_sources;
+}
+
+void Eyes::updateSources()
+{
+    m_sources = PluginManager::sources();
+}
+
+QStringList Eyes::availableSchemes()
+{
+    if( m_schemes.isEmpty() )
+        updateSchemes();
+
+    return m_schemes;
+}
+
+void Eyes::updateSchemes()
+{
+    m_schemes = PluginManager::schemes();
 }
