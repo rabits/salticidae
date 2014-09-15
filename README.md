@@ -19,6 +19,12 @@ TODO:
 * Video caching & navigation
 * Video archive support
 
+Support:
+--------
+You can support my open-source development by a small Bitcoin donation.
+
+My bitcoin wallet: `15phQNwkVs3fXxvxzBkhuhXA2xoKikPfUy`
+
 Requirements:
 -------------
 

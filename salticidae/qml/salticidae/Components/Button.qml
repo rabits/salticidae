@@ -15,6 +15,7 @@ Rectangle {
 
     border.color: button.colorBorder
     radius: 4 * screenScale
+
     state: "nofocus"
 
     gradient: Gradient {
