@@ -2,6 +2,7 @@
 #define PLUGINMANAGER_H
 
 #include <protoeye.h>
+#include <QtQml>
 
 class PluginManager
 {
@@ -19,10 +20,8 @@ public:
     // Init & load internal and external plugins
     static void initPlugins();
 
-    // Register dummy QML objects
-    static void registerQmlType() {
-        qmlRegisterType<QObject>(ProtoEye_iid, 1, 0, "Dummy" );
-    }
+    // Register plugin QML types
+    static void registerQmlPluginTypes();
 
 private:
     static QList<ProtoEye*> s_eyes_plugins;

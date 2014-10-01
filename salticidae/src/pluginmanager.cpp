@@ -12,7 +12,6 @@ void PluginManager::loadPlugin(QObject *plugin, QString plugin_name)
         if( proto_plugin->type().compare("eye") == 0 ) {
             ProtoEye *plugin_typed = qobject_cast<ProtoEye*>(plugin);
             if( plugin_typed ) {
-                plugin_typed->registerQmlType();
                 s_eyes_plugins.append(plugin_typed);
                 qDebug() << "[Salticidae]     loading success";
             } else {
@@ -28,16 +27,18 @@ void PluginManager::loadPlugin(QObject *plugin, QString plugin_name)
 
 void PluginManager::initPlugins()
 {
-    // Registering dummy types
-    registerQmlType();
+    qDebug("[Salticidae] Init plugins");
 
-    qDebug("[Salticidae] Loading internal plugins");
-    foreach (QObject *plugin, QPluginLoader::staticInstances()) {
+    // Registering dummy types
+    registerQmlPluginTypes();
+
+    // Internal plugins is not supported right now
+    /*qDebug("[Salticidae] Loading internal plugins");
+    foreach( QObject *plugin, QPluginLoader::staticInstances() ) {
         loadPlugin(plugin);
-    }
+    }*/
 
     QDir plugins_dir = QDir(qApp->applicationDirPath());
-    plugins_dir.cdUp();
     plugins_dir.cd("plugins");
     qDebug() << "[Salticidae] Loading external plugins from " << plugins_dir.path();
     foreach (QString file_name, plugins_dir.entryList(QStringList("libplugin-*.so"), QDir::Files)) {
@@ -46,11 +47,16 @@ void PluginManager::initPlugins()
     }
 }
 
+void PluginManager::registerQmlPluginTypes()
+{
+    qmlRegisterUncreatableType<ProtoEye>(ProtoEye_iid, 1, 0, "Plugin", "Eye Plugin Interface" );
+}
+
 ProtoEye* PluginManager::eye(QUrl url)
 {
     foreach (ProtoEye *plugin, s_eyes_plugins) {
-        if( plugin->schemes().contains(url.scheme()) )
-            return plugin;
+        if( plugin->isSupported(url) )
+            return plugin->instance(url);
     }
 
     return NULL;

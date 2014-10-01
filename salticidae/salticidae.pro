@@ -21,4 +21,12 @@ HEADERS += \
     src/eyes.h \
     src/pluginmanager.h
 
-INCLUDEPATH  += ../plugins/include
+include(../plugins/include.pri)
+
+!android {
+    # Copy target to root directory
+    QMAKE_POST_LINK = cp -lf "$${TARGET}" ../$${TARGET}.bin
+}
+
+RESOURCES += \
+    resources.qrc

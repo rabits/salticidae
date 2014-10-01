@@ -7,9 +7,9 @@
 #include <QtGui/QGuiApplication>
 #include <QTranslator>
 
+#include <QtQuick/QQuickView>
 #include <qplatformdefs.h>
 
-#include "qtquick2applicationviewer.h"
 #include "pluginmanager.h"
 
 class Eyes : public QObject
@@ -38,18 +38,13 @@ public:
     inline static Eyes* I() { if( s_pInstance == NULL ) s_pInstance = new Eyes(); return s_pInstance; }
     inline static void  destroyI() { delete s_pInstance; }
 
-    void initContext(QtQuick2ApplicationViewer &viewer, QGuiApplication *app);
+    void initContext(QQuickView &viewer, QGuiApplication *app);
     void setLocale(QString locale);
-    void initRoot(QtQuick2ApplicationViewer &viewer);
+    void initRoot(QQuickView &viewer);
 
     Q_INVOKABLE QVariant setting(QString key, QString value = "");
 
-    Q_INVOKABLE ProtoEye* eye(QString url) {
-        if( ! m_eyes.contains(url) ) {
-            m_eyes.insert(url, PluginManager::eye(QUrl(url)));
-        }
-        return m_eyes.value(url);
-    }
+    Q_INVOKABLE ProtoEye* eye(QString url);
 
     Q_INVOKABLE QList<QUrl> availableSources();
     Q_INVOKABLE void updateSources();

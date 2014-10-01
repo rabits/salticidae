@@ -15,8 +15,6 @@ Eyes::Eyes(QObject *parent)
 
     if( m_settings.value("preferences/locale").isNull() )
         m_settings.setValue("preferences/locale", QLocale::system().name());
-
-    qDebug("[Salticidae] Init eyes");
 }
 
 Eyes::~Eyes()
@@ -24,7 +22,7 @@ Eyes::~Eyes()
     qDebug("[Salticidae] Self destroying");
 }
 
-void Eyes::initContext(QtQuick2ApplicationViewer &viewer, QGuiApplication *app)
+void Eyes::initContext(QQuickView &viewer, QGuiApplication *app)
 {
     qDebug("[Salticidae] Init context");
 
@@ -49,7 +47,7 @@ void Eyes::setLocale(QString locale)
     }
 }
 
-void Eyes::initRoot(QtQuick2ApplicationViewer& viewer)
+void Eyes::initRoot(QQuickView& viewer)
 {
     m_root_object = viewer.rootObject();
 }
@@ -64,6 +62,14 @@ QVariant Eyes::setting(QString key, QString value)
     }
 
     return m_settings.value(key);
+}
+
+ProtoEye *Eyes::eye(QString url)
+{
+    if( ! m_eyes.contains(url) )
+        m_eyes.insert(url, PluginManager::eye(QUrl(url)));
+
+    return m_eyes.value(url);
 }
 
 QList<QUrl> Eyes::availableSources()

@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/salticidae/main.qml</file>
+        <file>qml/salticidae/Retina.qml</file>
+        <file>qml/salticidae/RetinaLayout.qml</file>
+        <file>qml/salticidae/Components/Address.qml</file>
+        <file>qml/salticidae/Components/Button.qml</file>
+        <file>qml/salticidae/Components/Message.qml</file>
+    </qresource>
+</RCC>

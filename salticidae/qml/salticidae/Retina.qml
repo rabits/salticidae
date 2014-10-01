@@ -13,7 +13,6 @@ Rectangle {
     Layout.fillWidth: true
     Layout.fillHeight: true
 
-    property string source: "no source"
     property color headerColor: Qt.rgba(Math.random(), Math.random(), Math.random(), 0.2)
 
     color: "#000"
@@ -21,7 +20,7 @@ Rectangle {
     border.width: 1
 
     VideoOutput {
-        id: vo_l
+        id: video_output
         anchors.fill: parent
     }
     Message {
@@ -33,18 +32,11 @@ Rectangle {
         id: retina_mouse
         anchors.fill: parent
         hoverEnabled: true
-        onPositionChanged: {
-            hide_header.restart()
-            header.state = "visible"
+        onClicked: {
+            parent.focus = true
+            header.show()
         }
-        onExited: {
-            header.state = "hidden"
-        }
-
-        //onClicked: {
-            //app.eye("/dev/video4").startCapture();
-            //Qt.quit();
-        //}
+        onExited: header.hide()
 
         Rectangle {
             id: header
@@ -58,16 +50,33 @@ Rectangle {
                 margins: 1
             }
 
+            property bool visible_locked: false
+            function show() {
+                hide_header.restart()
+                header.state = "visible"
+            }
+            function hide() {
+                if( ! header.visible_locked )
+                    header.state = "hidden"
+            }
+            function visibleLock(value) {
+                header.visible_locked = value
+            }
+
             MouseArea {
                 id: header_mouse
                 anchors.fill: parent
                 hoverEnabled: true
                 onPositionChanged: {
-                    header.state = "visible"
+                    header.show()
                     hide_header.stop()
                 }
                 onExited: {
                     hide_header.restart()
+                }
+                onClicked: {
+                    header.show()
+                    hide_header.stop()
                 }
 
                 Address {
@@ -83,8 +92,30 @@ Rectangle {
                     }
 
                     color: "#44444444"
+                    textPixelSize: header.height * 0.7
 
-                    onEntered: { header.state = 'visible'; hide_header.stop() }
+                    onEntered: {
+                        header.show()
+                        hide_header.stop()
+                    }
+                    onClicked: hide_header.stop()
+
+                    onSelectedSource: {
+                        if( video_output.source !== app.eye(source) ) {
+                            if( video_output.source != null ) {
+                                video_output.source.stop()
+                            }
+
+                            video_output.source = app.eye(source)
+                        }
+
+                        if( video_output.source == null ) {
+                            message.show("Can't display source:<br/>" + source)
+                            return
+                        }
+                        video_output.source.start()
+                        message.show("Selected source:<br/>" + source)
+                    }
                 }
 
                 Row {
@@ -103,7 +134,10 @@ Rectangle {
                         caption: "―"
 
                         onClicked: retina.parent.parent.parent.addRetina(retina.parent, 'vertical')
-                        onEntered: { header.state = 'visible'; hide_header.stop() }
+                        onEntered: {
+                            header.show()
+                            hide_header.stop()
+                        }
                     }
                     Button {
                         id: duplicate_horizontal
@@ -115,7 +149,10 @@ Rectangle {
                         caption: "∣"
 
                         onClicked: retina.parent.parent.parent.addRetina(retina.parent)
-                        onEntered: { header.state = 'visible'; hide_header.stop() }
+                        onEntered: {
+                            header.show()
+                            hide_header.stop()
+                        }
                     }
                     Button {
                         id: remove
@@ -127,7 +164,10 @@ Rectangle {
                         caption: "X"
 
                         onClicked: console.log("Not implemented yet")
-                        onEntered: { header.state = 'visible'; hide_header.stop() }
+                        onEntered: {
+                            header.show()
+                            hide_header.stop()
+                        }
                     }
                 }
             }
@@ -139,7 +179,7 @@ Rectangle {
                 running: true
                 repeat: true
 
-                onTriggered: header.state = "hidden"
+                onTriggered: header.hide()
             }
 
             state: "hidden"
@@ -164,6 +204,6 @@ Rectangle {
     }
 
     Component.onCompleted: {
-        header.state = "visible"
+        header.show()
     }
 }

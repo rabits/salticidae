@@ -1,7 +1,7 @@
 #include <QGuiApplication>
 #include <QtQml>
-#include "qtquick2applicationviewer.h"
 
+#include "qtquick2applicationviewer.h"
 #include "src/eyes.h"
 
 int main(int argc, char *argv[])
@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
     Eyes::I()->initContext(viewer, &app);
 
     qDebug("[Salticidae] Loading qml");
-    viewer.setMainQmlFile(QStringLiteral("qml/salticidae/main.qml"));
+    viewer.setSource(QUrl("qrc:/qml/salticidae/main.qml"));
     QObject::connect(viewer.engine(), SIGNAL(quit()), &viewer, SLOT(close()));
 
     Eyes::I()->initRoot(viewer);
