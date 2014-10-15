@@ -3,6 +3,7 @@
 #include <QPluginLoader>
 
 QList<ProtoEye*> PluginManager::s_eyes_plugins = QList<ProtoEye*>();
+QMap<QUrl, ProtoEye*> PluginManager::s_eyes = QMap<QUrl, ProtoEye*>();
 
 void PluginManager::loadPlugin(QObject *plugin, QString plugin_name)
 {
@@ -40,7 +41,7 @@ void PluginManager::initPlugins()
 
     QDir plugins_dir = QDir(qApp->applicationDirPath());
     plugins_dir.cd("plugins");
-    qDebug() << "[Salticidae] Loading external plugins from " << plugins_dir.path();
+    qDebug() << "[Salticidae] Loading external plugins from" << plugins_dir.path();
     foreach (QString file_name, plugins_dir.entryList(QStringList("libplugin-*.so"), QDir::Files)) {
         QPluginLoader loader(plugins_dir.absoluteFilePath(file_name));
         loadPlugin(loader.instance(), file_name);
@@ -49,23 +50,30 @@ void PluginManager::initPlugins()
 
 void PluginManager::registerQmlPluginTypes()
 {
-    qmlRegisterUncreatableType<ProtoEye>(ProtoEye_iid, 1, 0, "Plugin", "Eye Plugin Interface" );
+    qmlRegisterUncreatableType<ProtoEye>(ProtoEye_iid, 1, 0, "Plugin", "Eye Plugin Interface");
 }
 
 ProtoEye* PluginManager::eye(QUrl url)
 {
-    foreach (ProtoEye *plugin, s_eyes_plugins) {
-        if( plugin->isSupported(url) )
-            return plugin->instance(url);
+    if( ! s_eyes.contains(url) ) {
+        qDebug() << "[Salticidae] Getting new instance of plugin for" << url;
+
+        foreach (ProtoEye *plugin, s_eyes_plugins) {
+            if( plugin->isSupported(url) ) {
+                s_eyes.insert(url, plugin->instance(url));
+                break;
+            }
+        }
     }
 
-    return NULL;
+    return s_eyes.value(url);
 }
 
 QList<QUrl> PluginManager::sources()
 {
     QList<QUrl> out;
     foreach (ProtoEye *plugin, s_eyes_plugins) {
+        qDebug() << "[Salticidae] Retrieving sources from" << plugin->name();
         out.append(plugin->sources());
     }
 
@@ -76,6 +84,7 @@ QStringList PluginManager::schemes()
 {
     QStringList out;
     foreach (ProtoEye *plugin, s_eyes_plugins) {
+        qDebug() << "[Salticidae] Retrieving schemes from" << plugin->name();
         out.append(plugin->schemes());
     }
 

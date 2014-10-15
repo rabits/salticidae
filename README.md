@@ -7,21 +7,22 @@ Also it is an FPV viewer for your mobile phone & stereo glasses (like Oculus Rif
 Features:
 ---------
 * Cross-platform (tested on Ubuntu & Android)
+* Dynamic & configurable video layout
 * v4l2 USB DVR support
 
 TODO:
 -----
-* Dynamic & Configurable video layout
+* Video recording support
 * Telemetry OSD support
+* Save layout schemas
 * Oculus Rift barrel distortion support
 * Oculus Rift head tracking (telemetry & trainer port) control support
 * IP cameras support
 * Video caching & navigation
-* Video archive support
 
 Support:
 --------
-You can support my open-source development by a small Bitcoin donation.
+If you like/dislike spiders, you can support my open-source development by a small Bitcoin donation.
 
 My bitcoin wallet: `15phQNwkVs3fXxvxzBkhuhXA2xoKikPfUy`
 

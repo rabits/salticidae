@@ -70,7 +70,10 @@ Rectangle {
 
             text: "no source"
 
-            onEditingFinished: address.selectedSource(this.text)
+            onEditingFinished: {
+                address.selectedSource(this.text)
+                Qt.inputMethod.hide();
+            }
 
             MouseArea {
                 id: retina_source_mouse_area
@@ -101,9 +104,13 @@ Rectangle {
         }
 
         function show(vis) {
-            height = vis ? 100 : 0
-            if( vis && list_view.model.count === 0 ) {
-                update()
+            height = (vis ? 100 : 0) * screenScale
+            if( vis ) {
+                Qt.inputMethod.hide();
+                if( list_view.model.count === 0 ) {
+                    console.log(list_view.model.count)
+                    update()
+                }
             }
         }
         function update() {
@@ -149,14 +156,16 @@ Rectangle {
                     right: parent.right
                 }
 
-                height: 30
+                height: 30 * screenScale
                 color: "#11ffffff"
                 Text {
                     anchors{
-                        verticalCenter: parent.verticalCenter
+                        top: parent.top
+                        bottom: parent.bottom
                         left: parent.left
                         leftMargin: 10
                     }
+                    verticalAlignment: Text.AlignVCenter
 
                     text: info
                     color: type == "url" ? "#fff" : "#0f0"

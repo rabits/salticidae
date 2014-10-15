@@ -1,8 +1,9 @@
 #ifndef PLUGINMANAGER_H
 #define PLUGINMANAGER_H
 
-#include <protoeye.h>
 #include <QtQml>
+
+#include <protoeye.h>
 
 class PluginManager
 {
@@ -22,6 +23,8 @@ public:
 
     // Register plugin QML types
     static void registerQmlPluginTypes();
+
+    static QMap<QUrl, ProtoEye*> s_eyes;
 
 private:
     static QList<ProtoEye*> s_eyes_plugins;

@@ -2,6 +2,7 @@ import QtQuick 2.2
 import QtMultimedia 5.2
 import QtQuick.Layouts 1.1
 
+import org.rabits.salticidae 1.0
 import org.rabits.salticidae.plugins.eye 1.0
 import "Components"
 
@@ -22,6 +23,9 @@ Rectangle {
     VideoOutput {
         id: video_output
         anchors.fill: parent
+        source: EyeDisplay {
+            id: eyedisplay
+        }
     }
     Message {
         id: message
@@ -101,19 +105,13 @@ Rectangle {
                     onClicked: hide_header.stop()
 
                     onSelectedSource: {
-                        if( video_output.source !== app.eye(source) ) {
-                            if( video_output.source != null ) {
-                                video_output.source.stop()
-                            }
+                        eyedisplay.setSource(source)
 
-                            video_output.source = app.eye(source)
-                        }
-
-                        if( video_output.source == null ) {
+                        if( eyedisplay.getSource() === null ) {
                             message.show("Can't display source:<br/>" + source)
                             return
                         }
-                        video_output.source.start()
+                        eyedisplay.start()
                         message.show("Selected source:<br/>" + source)
                     }
                 }

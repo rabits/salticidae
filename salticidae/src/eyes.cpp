@@ -1,6 +1,7 @@
 #include <QDebug>
 #include <QScreen>
 
+#include "eyedisplay.h"
 #include "eyes.h"
 
 Eyes* Eyes::s_pInstance = NULL;
@@ -9,7 +10,6 @@ Eyes::Eyes(QObject *parent)
     : QObject(parent)
     , m_settings()
     , m_translator()
-    , m_eyes()
 {
     qDebug("[Salticidae] Init app");
 
@@ -64,14 +64,6 @@ QVariant Eyes::setting(QString key, QString value)
     return m_settings.value(key);
 }
 
-ProtoEye *Eyes::eye(QString url)
-{
-    if( ! m_eyes.contains(url) )
-        m_eyes.insert(url, PluginManager::eye(QUrl(url)));
-
-    return m_eyes.value(url);
-}
-
 QList<QUrl> Eyes::availableSources()
 {
     if( m_sources.isEmpty() )
@@ -82,6 +74,7 @@ QList<QUrl> Eyes::availableSources()
 
 void Eyes::updateSources()
 {
+    qDebug("[Salticidae] Updating sources");
     m_sources = PluginManager::sources();
 }
 
@@ -95,5 +88,11 @@ QStringList Eyes::availableSchemes()
 
 void Eyes::updateSchemes()
 {
+    qDebug("[Salticidae] Updating schemes");
     m_schemes = PluginManager::schemes();
+}
+
+void Eyes::registerQmlTypes()
+{
+    qmlRegisterType<EyeDisplay>("org.rabits.salticidae", 1, 0, "EyeDisplay");
 }

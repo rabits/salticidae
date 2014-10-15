@@ -29,8 +29,6 @@ private:
     QTranslator      m_translator;
     QGuiApplication *m_app;
 
-    QMap<QUrl, ProtoEye*> m_eyes;
-
     QList<QUrl> m_sources;
     QStringList m_schemes;
 
@@ -44,13 +42,13 @@ public:
 
     Q_INVOKABLE QVariant setting(QString key, QString value = "");
 
-    Q_INVOKABLE ProtoEye* eye(QString url);
-
     Q_INVOKABLE QList<QUrl> availableSources();
     Q_INVOKABLE void updateSources();
 
     Q_INVOKABLE QStringList availableSchemes();
     Q_INVOKABLE void updateSchemes();
+
+    static void registerQmlTypes();
 
 signals:
     void settingChanged(QString key);

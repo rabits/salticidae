@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <!-- EasyCAP Fushicai USBTV007 -->
+    <usb-device vendor-id="1b71" product-id="3002" />
+</resources>
