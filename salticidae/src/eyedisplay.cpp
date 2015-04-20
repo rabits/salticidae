@@ -3,6 +3,7 @@
 #include <QVideoSurfaceFormat>
 
 #include "pluginmanager.h"
+#include "eyes.h"
 
 EyeDisplay::EyeDisplay(QObject *parent)
     : QObject(parent)
@@ -10,6 +11,12 @@ EyeDisplay::EyeDisplay(QObject *parent)
     , _connected(false)
     , _eye(NULL)
 {
+}
+
+EyeDisplay::~EyeDisplay()
+{
+    stop();
+    delete _vs;
 }
 
 QAbstractVideoSurface* EyeDisplay::videoSurface() const
@@ -73,7 +80,7 @@ void EyeDisplay::stop()
     closeSurface();
 }
 
-void EyeDisplay::present(QImage *image)
+void EyeDisplay::present(QImage image)
 {
-    _vs->present(QVideoFrame(*image));
+    _vs->present(QVideoFrame(image));
 }

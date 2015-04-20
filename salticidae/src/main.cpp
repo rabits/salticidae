@@ -1,8 +1,7 @@
-#include <QGuiApplication>
 #include <QtQml>
 
 #include "qtquick2applicationviewer.h"
-#include "src/eyes.h"
+#include "eyes.h"
 
 int main(int argc, char *argv[])
 {

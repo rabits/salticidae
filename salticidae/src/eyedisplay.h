@@ -14,7 +14,7 @@ class EyeDisplay
 
 public:
     explicit EyeDisplay(QObject *parent = 0);
-    virtual ~EyeDisplay() {}
+    ~EyeDisplay();
 
     // Interface for VideoOutput
     QAbstractVideoSurface* videoSurface() const;
@@ -30,7 +30,7 @@ public slots:
     void stop();
 
 private slots:
-    void present(QImage *image);
+    void present(QImage image);
 
 private:
     void closeSurface();

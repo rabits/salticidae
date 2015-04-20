@@ -15,6 +15,11 @@ Eyes::Eyes(QObject *parent)
 
     if( m_settings.value("preferences/locale").isNull() )
         m_settings.setValue("preferences/locale", QLocale::system().name());
+    if( m_settings.value("recorder/write_dir").isNull() ) {
+        QDir dir = QDir(QDir::homePath() + "/salticidae/recorder");
+        dir.mkpath(".");
+        m_settings.setValue("recorder/write_dir", dir.path());
+    }
 }
 
 Eyes::~Eyes()
