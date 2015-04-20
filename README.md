@@ -8,7 +8,7 @@ Features:
 ---------
 * Cross-platform (tested on Ubuntu & Android)
 * Dynamic & configurable video layout
-* v4l2 USB DVR support
+* UVC & v4l2 USB DVR support
 
 TODO:
 -----
@@ -31,14 +31,14 @@ Requirements:
 
 * Exec platform:
   * Linux (Ubuntu 14.04)
-  * Android phone (Galaxy Note 3 N9005)
+  * Android phone (Galaxy Note 3 N9005, Note 4 N910F)
     * Phone dock with USB port
       * + USB for stereo view
       * + USB for Oculus Rift head tracking
       * + USB for Telemetry
       * + HDMI for Oculus Rift
 * Video tract:
-  * USB DVR (2 x [EasyCAP](http://linuxtv.org/wiki/index.php/Easycap))
+  * USB DVR (2 x [FEBON100](http://febon.blogspot.com/2012/02/1.html))
   * A/V Receiver [SkyZone 5.8GHz 8CH Diversity A/V Receiver w/Dual Output](http://www.hobbyking.com/hobbyking/store/__27778__SkyZone_5_8GHz_8CH_Diversity_A_V_Receiver_w_Dual_Output.html))
   * A/V Transmitter (2 x [SkyZone TS353 5.8G 400mW FPV Transmitter](http://www.hobbyking.com/hobbyking/store/__27145__SkyZone_TS353_5_8G_400mW_FPV_Transmitter.html)))
   * 12V UBEC ([12V 4.5A UBEC 2-5S Lipoly](http://www.hobbyking.com/hobbyking/store/__29761__12V_4_5A_UBEC_2_5S_Lipoly_7_2_21v_UK_Warehouse_.html))
