@@ -3,7 +3,7 @@ import QtMultimedia 5.2
 import QtQuick.Layouts 1.1
 
 import org.rabits.salticidae 1.0
-import org.rabits.salticidae.plugins.eye 1.0
+import org.rabits.salticidae.plugins.video 1.0
 import "Components"
 
 Rectangle {

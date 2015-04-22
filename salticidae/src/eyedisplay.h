@@ -3,7 +3,7 @@
 
 #include <QAbstractVideoSurface>
 
-#include <protoeye.h>
+#include <protovideo.h>
 
 class EyeDisplay
     : public QObject
@@ -23,7 +23,7 @@ public:
     // Connect Eye as source of pictures
     Q_INVOKABLE void setSource(QString url);
 
-    Q_INVOKABLE ProtoEye* getSource();
+    Q_INVOKABLE ProtoVideo* getSource();
 
 public slots:
     void start();
@@ -38,7 +38,7 @@ private:
     QAbstractVideoSurface* _vs;
 
     bool      _connected;
-    ProtoEye* _eye;
+    ProtoVideo* _eye;
 };
 
 #endif // EYEDISPLAY_H

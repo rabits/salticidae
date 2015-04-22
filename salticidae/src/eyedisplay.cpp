@@ -34,10 +34,10 @@ void EyeDisplay::setSource(QString url)
 {
     qDebug() << "[Salticidae] Set eye for display";
     stop();
-    _eye = PluginManager::eye(QUrl(url));
+    _eye = PluginManager::video(QUrl(url));
 }
 
-ProtoEye* EyeDisplay::getSource()
+ProtoVideo* EyeDisplay::getSource()
 {
     return _eye;
 }
@@ -59,7 +59,7 @@ void EyeDisplay::start()
     }
 
     if( ! _connected )
-        _connected = connect(_eye, &ProtoEye::present, this, &EyeDisplay::present);
+        _connected = connect(_eye, &ProtoVideo::present, this, &EyeDisplay::present);
 
     closeSurface();
     _vs->start(QVideoSurfaceFormat(_eye->size(), QVideoFrame::Format_RGB32));
@@ -73,7 +73,7 @@ void EyeDisplay::stop()
 
     if( _eye ) {
         if( _connected )
-            _connected = ! disconnect(_eye, &ProtoEye::present, this, &EyeDisplay::present);
+            _connected = ! disconnect(_eye, &ProtoVideo::present, this, &EyeDisplay::present);
         _eye->stop();
     }
 
@@ -82,5 +82,12 @@ void EyeDisplay::stop()
 
 void EyeDisplay::present(QImage image)
 {
+    //qDebug() << "[DEBUG] Present & save image";
     _vs->present(QVideoFrame(image));
+
+    /*// TODO: Simple image recording
+    QDateTime dt = QDateTime::currentDateTime();
+    QDir dir = QDir(Eyes::I()->setting("recorder/write_dir").toString() + "/" + dt.toString("yyMMdd_hhmm"));
+    dir.mkpath(".");
+    image.save(dir.path() + "/" + dt.toString("yyMMdd_hhmmss_zzz") + ".jpg", "JPG");*/
 }

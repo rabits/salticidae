@@ -3,14 +3,16 @@
 
 #include <QtQml>
 
-#include <protoeye.h>
+#include <protovideo.h>
+#include <prototransform.h>
 
 class PluginManager
 {
 public:
     virtual ~PluginManager() {}
 
-    static ProtoEye* eye(QUrl url);
+    static ProtoVideo* video(QUrl url);
+    static ProtoTransform* transform(QMap<QString, QVariant> &settings);
 
     // Get list of found supported sources by loaded plugins
     static QList<QUrl> sources();
@@ -24,10 +26,11 @@ public:
     // Register plugin QML types
     static void registerQmlPluginTypes();
 
-    static QMap<QUrl, ProtoEye*> s_eyes;
+    static QMap<QUrl, ProtoVideo*> s_videos;
 
 private:
-    static QList<ProtoEye*> s_eyes_plugins;
+    static QList<ProtoVideo*> s_video_plugins;
+    static QList<ProtoTransform*> s_transform_plugins;
 
     // Load found plugin
     static void loadPlugin(QObject *plugin, QString path = "internal plugin");

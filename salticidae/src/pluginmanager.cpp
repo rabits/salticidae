@@ -2,18 +2,20 @@
 
 #include <QPluginLoader>
 
-QList<ProtoEye*> PluginManager::s_eyes_plugins = QList<ProtoEye*>();
-QMap<QUrl, ProtoEye*> PluginManager::s_eyes = QMap<QUrl, ProtoEye*>();
+QList<ProtoVideo*> PluginManager::s_video_plugins = QList<ProtoVideo*>();
+QList<ProtoTransform*> PluginManager::s_transform_plugins = QList<ProtoTransform*>();
+
+QMap<QUrl, ProtoVideo*> PluginManager::s_videos = QMap<QUrl, ProtoVideo*>();
 
 void PluginManager::loadPlugin(QObject *plugin, QString plugin_name)
 {
     ProtoPlugin *proto_plugin = dynamic_cast<ProtoPlugin*>(plugin);
     if( plugin ) {
         qDebug() << "[Salticidae]   found plugin type:" << proto_plugin->type() << "name:" << proto_plugin->name() << "version:" << proto_plugin->version();
-        if( proto_plugin->type().compare("eye") == 0 ) {
-            ProtoEye *plugin_typed = qobject_cast<ProtoEye*>(plugin);
+        if( proto_plugin->type().compare("video") == 0 ) {
+            ProtoVideo *plugin_typed = qobject_cast<ProtoVideo*>(plugin);
             if( plugin_typed ) {
-                s_eyes_plugins.append(plugin_typed);
+                s_video_plugins.append(plugin_typed);
                 qDebug() << "[Salticidae]     loading success";
             } else {
                 qDebug() << "[Salticidae]     loading failure";
@@ -42,7 +44,7 @@ void PluginManager::initPlugins()
     QDir plugins_dir = QDir(qApp->applicationDirPath());
     plugins_dir.cd("plugins");
     qDebug() << "[Salticidae] Loading external plugins from" << plugins_dir.path();
-    foreach (QString file_name, plugins_dir.entryList(QStringList("libplugin-*.so"), QDir::Files)) {
+    foreach (QString file_name, plugins_dir.entryList(QStringList("libsalticidae-plugin-*.so"), QDir::Files)) {
         QPluginLoader loader(plugins_dir.absoluteFilePath(file_name));
         loadPlugin(loader.instance(), file_name);
     }
@@ -50,29 +52,46 @@ void PluginManager::initPlugins()
 
 void PluginManager::registerQmlPluginTypes()
 {
-    qmlRegisterUncreatableType<ProtoEye>(ProtoEye_iid, 1, 0, "Plugin", "Eye Plugin Interface");
+    qmlRegisterUncreatableType<ProtoVideo>(ProtoVideo_iid, 1, 0, "Plugin", "Video Plugin Interface");
+    qmlRegisterUncreatableType<ProtoTransform>(ProtoTransform_iid, 1, 0, "Plugin", "Transform Plugin Interface");
 }
 
-ProtoEye* PluginManager::eye(QUrl url)
+ProtoVideo* PluginManager::video(QUrl url)
 {
-    if( ! s_eyes.contains(url) ) {
-        qDebug() << "[Salticidae] Getting new instance of plugin for" << url;
+    if( ! s_videos.contains(url) ) {
+        qDebug() << "[Salticidae] Getting new instance of video plugin for" << url;
 
-        foreach (ProtoEye *plugin, s_eyes_plugins) {
+        foreach (ProtoVideo *plugin, s_video_plugins) {
             if( plugin->isSupported(url) ) {
-                s_eyes.insert(url, plugin->instance(url));
+                s_videos.insert(url, plugin->instance(url));
                 break;
             }
         }
     }
 
-    return s_eyes.value(url);
+    return s_videos.value(url);
+}
+
+ProtoTransform* PluginManager::transform(QMap<QString, QVariant> &settings)
+{
+    /*if( ! s_videos.contains(url) ) {
+        qDebug() << "[Salticidae] Getting new instance of plugin for" << url;
+
+        foreach (ProtoTransform *plugin, s_transform_plugins) {
+            if( plugin->isSupported(url) ) {
+                s_videos.insert(url, plugin->instance(url));
+                break;
+            }
+        }
+    }
+
+    return s_videos.value(url);*/
 }
 
 QList<QUrl> PluginManager::sources()
 {
     QList<QUrl> out;
-    foreach (ProtoEye *plugin, s_eyes_plugins) {
+    foreach (ProtoVideo *plugin, s_video_plugins) {
         qDebug() << "[Salticidae] Retrieving sources from" << plugin->name();
         out.append(plugin->sources());
     }
@@ -83,7 +102,7 @@ QList<QUrl> PluginManager::sources()
 QStringList PluginManager::schemes()
 {
     QStringList out;
-    foreach (ProtoEye *plugin, s_eyes_plugins) {
+    foreach (ProtoVideo *plugin, s_video_plugins) {
         qDebug() << "[Salticidae] Retrieving schemes from" << plugin->name();
         out.append(plugin->schemes());
     }
