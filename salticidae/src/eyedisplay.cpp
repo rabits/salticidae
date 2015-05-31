@@ -16,6 +16,7 @@ EyeDisplay::EyeDisplay(QObject *parent)
 EyeDisplay::~EyeDisplay()
 {
     stop();
+    qDeleteAll(_transforms);
     delete _vs;
 }
 
@@ -40,6 +41,43 @@ void EyeDisplay::setSource(QString url)
 ProtoVideo* EyeDisplay::getSource()
 {
     return _eye;
+}
+
+void EyeDisplay::addTransform(QString name)
+{
+    _transforms.append(PluginManager::transform(name));
+}
+
+ProtoTransform *EyeDisplay::getTransform(QString name)
+{
+    ProtoTransform *transform = NULL;
+
+    foreach( ProtoTransform *t, _transforms ) {
+        if( t->name() == name ) {
+            transform = t;
+            break;
+        }
+    }
+
+    return transform;
+}
+
+void EyeDisplay::deleteTransform(QString name)
+{
+    ProtoTransform *transform = getTransform(name);
+    _transforms.removeOne(transform);
+    delete transform;
+}
+
+QStringList EyeDisplay::getTransforms()
+{
+    QStringList transforms;
+
+    foreach( ProtoTransform *t, _transforms ) {
+        transforms.append(t->name());
+    }
+
+    return transforms;
 }
 
 void EyeDisplay::closeSurface()
@@ -83,6 +121,13 @@ void EyeDisplay::stop()
 void EyeDisplay::present(QImage image)
 {
     //qDebug() << "[DEBUG] Present & save image";
+    foreach( ProtoTransform *transform, _transforms ) {
+        image = transform->process(image);
+    }
+    if( _vs->nativeResolution() != image.size() ) {
+        _vs->stop();
+        _vs->start(QVideoSurfaceFormat(image.size(), QVideoFrame::Format_RGB32));
+    }
     _vs->present(QVideoFrame(image));
 
     /*// TODO: Simple image recording

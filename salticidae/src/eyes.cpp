@@ -97,6 +97,12 @@ void Eyes::updateSchemes()
     m_schemes = PluginManager::schemes();
 }
 
+QStringList Eyes::availableTransforms()
+{
+    qDebug("[Salticidae] Getting transforms");
+    return PluginManager::transforms();
+}
+
 void Eyes::registerQmlTypes()
 {
     qmlRegisterType<EyeDisplay>("org.rabits.salticidae", 1, 0, "EyeDisplay");

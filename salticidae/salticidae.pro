@@ -1,4 +1,4 @@
-QT += multimedia
+QT += multimedia svg
 
 # Add more folders to ship with the application, here
 qml.source = qml/salticidae

@@ -48,6 +48,8 @@ public:
     Q_INVOKABLE QStringList availableSchemes();
     Q_INVOKABLE void updateSchemes();
 
+    Q_INVOKABLE QStringList availableTransforms();
+
     static void registerQmlTypes();
 
 signals:

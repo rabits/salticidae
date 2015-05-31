@@ -4,6 +4,7 @@
 #include <QAbstractVideoSurface>
 
 #include <protovideo.h>
+#include <prototransform.h>
 
 class EyeDisplay
     : public QObject
@@ -25,6 +26,11 @@ public:
 
     Q_INVOKABLE ProtoVideo* getSource();
 
+    Q_INVOKABLE void addTransform(QString name);
+    Q_INVOKABLE ProtoTransform* getTransform(QString name);
+    Q_INVOKABLE void deleteTransform(QString name);
+    Q_INVOKABLE QStringList getTransforms();
+
 public slots:
     void start();
     void stop();
@@ -39,6 +45,8 @@ private:
 
     bool      _connected;
     ProtoVideo* _eye;
+
+    QList<ProtoTransform*> _transforms;
 };
 
 #endif // EYEDISPLAY_H

@@ -12,13 +12,16 @@ public:
     virtual ~PluginManager() {}
 
     static ProtoVideo* video(QUrl url);
-    static ProtoTransform* transform(QMap<QString, QVariant> &settings);
+    static ProtoTransform* transform(QString name);
 
     // Get list of found supported sources by loaded plugins
     static QList<QUrl> sources();
 
     // Get list of supported schemes by loaded plugins
     static QStringList schemes();
+
+    // Get list of available transform plugins
+    static QStringList transforms();
 
     // Init & load internal and external plugins
     static void initPlugins();

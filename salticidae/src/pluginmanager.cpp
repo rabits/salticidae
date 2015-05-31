@@ -17,9 +17,15 @@ void PluginManager::loadPlugin(QObject *plugin, QString plugin_name)
             if( plugin_typed ) {
                 s_video_plugins.append(plugin_typed);
                 qDebug() << "[Salticidae]     loading success";
-            } else {
+            } else
                 qDebug() << "[Salticidae]     loading failure";
-            }
+        } else if( proto_plugin->type().compare("transform") == 0 ) {
+            ProtoTransform *plugin_typed = qobject_cast<ProtoTransform*>(plugin);
+            if( plugin_typed ) {
+                s_transform_plugins.append(plugin_typed);
+                qDebug() << "[Salticidae]     loading success";
+            } else
+                qDebug() << "[Salticidae]     loading failure";
         } else {
             qDebug() << "[Salticidae]     skipped - unknown plugin type" << proto_plugin->type();
         }
@@ -44,7 +50,7 @@ void PluginManager::initPlugins()
     QDir plugins_dir = QDir(qApp->applicationDirPath());
     plugins_dir.cd("plugins");
     qDebug() << "[Salticidae] Loading external plugins from" << plugins_dir.path();
-    foreach (QString file_name, plugins_dir.entryList(QStringList("libsalticidae-plugin-*.so"), QDir::Files)) {
+    foreach( QString file_name, plugins_dir.entryList(QStringList("libsalticidae-plugin-*.so"), QDir::Files) ) {
         QPluginLoader loader(plugins_dir.absoluteFilePath(file_name));
         loadPlugin(loader.instance(), file_name);
     }
@@ -61,7 +67,7 @@ ProtoVideo* PluginManager::video(QUrl url)
     if( ! s_videos.contains(url) ) {
         qDebug() << "[Salticidae] Getting new instance of video plugin for" << url;
 
-        foreach (ProtoVideo *plugin, s_video_plugins) {
+        foreach( ProtoVideo *plugin, s_video_plugins ) {
             if( plugin->isSupported(url) ) {
                 s_videos.insert(url, plugin->instance(url));
                 break;
@@ -72,26 +78,24 @@ ProtoVideo* PluginManager::video(QUrl url)
     return s_videos.value(url);
 }
 
-ProtoTransform* PluginManager::transform(QMap<QString, QVariant> &settings)
+ProtoTransform* PluginManager::transform(QString name)
 {
-    /*if( ! s_videos.contains(url) ) {
-        qDebug() << "[Salticidae] Getting new instance of plugin for" << url;
+    ProtoTransform *plugin = NULL;
 
-        foreach (ProtoTransform *plugin, s_transform_plugins) {
-            if( plugin->isSupported(url) ) {
-                s_videos.insert(url, plugin->instance(url));
-                break;
-            }
+    foreach( ProtoTransform *t, s_transform_plugins ) {
+        if( t->name() == name ) {
+            plugin = t->instance();
+            break;
         }
     }
 
-    return s_videos.value(url);*/
+    return plugin;
 }
 
 QList<QUrl> PluginManager::sources()
 {
     QList<QUrl> out;
-    foreach (ProtoVideo *plugin, s_video_plugins) {
+    foreach( ProtoVideo *plugin, s_video_plugins ) {
         qDebug() << "[Salticidae] Retrieving sources from" << plugin->name();
         out.append(plugin->sources());
     }
@@ -102,9 +106,19 @@ QList<QUrl> PluginManager::sources()
 QStringList PluginManager::schemes()
 {
     QStringList out;
-    foreach (ProtoVideo *plugin, s_video_plugins) {
+    foreach( ProtoVideo *plugin, s_video_plugins ) {
         qDebug() << "[Salticidae] Retrieving schemes from" << plugin->name();
         out.append(plugin->schemes());
+    }
+
+    return out;
+}
+
+QStringList PluginManager::transforms()
+{
+    QStringList out;
+    foreach( ProtoTransform *plugin, s_transform_plugins ) {
+        out.append(plugin->name());
     }
 
     return out;
