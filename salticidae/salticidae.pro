@@ -47,7 +47,7 @@ android {
     resolutions = ldpi mdpi hdpi xhdpi xxhdpi xxxhdpi
     for(res, resolutions) {
         icon_$${res}.target = icon_$$res
-        icon_$${res}.commands = mkdir -p ../android-build/res/drawable-$$res && convert -background none -density 1200 -resize $$eval($${res}.size) "$${icon_svg}" ../android-build/res/drawable-$$res/icon.png
+        icon_$${res}.commands = mkdir -p res/drawable-$$res && convert -background none -density 1200 -resize $$eval($${res}.size) "$${icon_svg}" res/drawable-$$res/icon.png
         QMAKE_EXTRA_TARGETS += icon_$$res
         POST_TARGETDEPS += icon_$$res
     }
